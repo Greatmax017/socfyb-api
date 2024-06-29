@@ -20,9 +20,6 @@ class Student extends Model
         'event'
     ];
 
-    protected $casts = [
-        'is_paid' => 'boolean'
-    ];
 
 
 }
