@@ -211,9 +211,7 @@ class UserController extends Controller
         try {
 
 
-            $student = Student::where('id', 1)->first();
-            $student->event = "I was here";
-            $student->save();
+           
 
 
             //get payload
