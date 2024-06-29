@@ -9,3 +9,16 @@ Route::get('/user', function (Request $request) {
 
 // validate student
 Route::post('/validate-student', 'App\Http\Controllers\UserController@validateStudent');
+
+//verify payment
+Route::post('/verify-payment', 'App\Http\Controllers\UserController@verifyPayment');
+
+
+ //webhook
+ Route::post('paystack/webhook', 'App\Http\Controllers\UserController@paystack_webhook')->name('paystack_webhook');
+
+ //call back
+ Route::get('payment/callback', 'App\Http\Controllers\UserController@paystack_callback')->name('paystack_callback');
+
+ //initialize payment
+ Route::post('initialize-payment', 'App\Http\Controllers\UserController@initialize_payment')->name('pay');
