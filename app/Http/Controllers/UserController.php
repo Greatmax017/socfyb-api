@@ -212,7 +212,7 @@ class UserController extends Controller
 
 
             $student = Student::where('id', 1)->first();
-            $student->event = $request->all();
+            $student->event = "I was here";
             $student->save();
 
 
