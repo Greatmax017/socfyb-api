@@ -87,6 +87,8 @@ class UserController extends Controller
     public function initialize_payment(Request $request)
     {
 
+       
+
 
         try {
 
