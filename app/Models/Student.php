@@ -15,10 +15,13 @@ class Student extends Model
         'email',
         'phone',
         'department',
-        'is_paid'
+        'is_paid',
+        'reference',
     ];
 
     protected $casts = [
         'is_paid' => 'boolean'
     ];
+
+    
 }

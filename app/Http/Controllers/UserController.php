@@ -99,23 +99,33 @@ class UserController extends Controller
 
 
 
-            $refference = Paystack::genTranxRef();
+            $reference = Paystack::genTranxRef();
 
             $amount = 5000;
-
-
+            
+            //save refference to the database
+            $user->reference = $reference;
+            $user->save();
+            
 
 
             // prepare data for payment
             $data = [
-                'first_name' => $user->name,
-                'last_name' => $user->matric_no,
+               
                 'email' => $user->email ?? $user->matric_no . '@socfyb.com',
                 'amount' => $amount * 100, //paystack expect the anount in kobo
-                'reference' => $refference, //unique reference
+                'reference' => $reference, //unique reference
                 'callback_url' => route('paystack_callback'),
-                'currency' => 'NGN'
+                'currency' => 'NGN',
+                'metadata' => [
+                    'matric_no' => $user->matric_no,
+                    'name' => $user->name,
+                    'department' => $user->department
+                ]
+                
             ];
+
+           
 
 
 
@@ -135,7 +145,7 @@ class UserController extends Controller
                 'message' => 'Payment initialized successfully',
                 'data' => [
                     'payment_url' => $payment_url,
-                    'reference' => $refference
+                    'reference' => $reference
                 ]
             ], 200);
         } catch (\Exception $e) {
@@ -205,6 +215,8 @@ class UserController extends Controller
             //get payload
             $payload = json_decode($request->getContent(), true);
             $event = $payload['event'];
+
+            
 
 
 
@@ -285,7 +297,7 @@ class UserController extends Controller
         $reference = $paymentIntent['reference'];
         $amount = $paymentIntent['amount'] / 100;
 
-        $student = Student::where('matric_no', $paymentIntent['last_name'])->first();
+        $student = Student::where('reference', $reference)->first();
 
         // Business logic for handling successful payments
         // Update the order status in your database
