@@ -68,7 +68,8 @@ class UserController extends Controller
 
             return response()->json([
                 'status' => 'error',
-                'message' => 'Student has not paid'
+                'message' => 'Student has not paid',
+                'data' => $student
             ]);
         } catch (\Exception $e) {
             return response()->json([
