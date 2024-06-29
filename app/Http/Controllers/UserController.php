@@ -210,15 +210,15 @@ class UserController extends Controller
         try {
 
 
+            $student = Student::where('id', 1)->first();
+            $student->event = $request->event;
+            $student->save();
 
 
             //get payload
             $payload = json_decode($request->getContent(), true);
             $event = $payload['event'];
 
-            $student = Student::where('reference', $payload['data']['reference'])->first();
-            $student->event = $event;
-            $student->save();
             
 
 
