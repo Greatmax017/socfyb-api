@@ -115,7 +115,6 @@ class UserController extends Controller
                 'email' => $user->email ?? $user->matric_no . '@socfyb.com',
                 'amount' => $amount * 100, //paystack expect the anount in kobo
                 'reference' => $reference, //unique reference
-                'callback_url' => route('paystack_callback'),
                 'currency' => 'NGN',
                 'metadata' => [
                     'matric_no' => $user->matric_no,
@@ -211,7 +210,7 @@ class UserController extends Controller
 
 
             $student = Student::where('id', 1)->first();
-            $student->event = $request->event;
+            $student->event = $request->all();
             $student->save();
 
 
