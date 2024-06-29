@@ -253,6 +253,10 @@ class UserController extends Controller
                     // Handle charge success
                     $this->handlePaymentIntentSucceeded($payload['data']);
                     break;
+                case 'transfer.success':
+                    // Handle transfer success
+                    $this->handlePaymentIntentSucceeded($payload['data']);
+                    break;
                 case 'charge.failed':
                     // Handle charge failed
                     $this->handlePaymentIntentFailed($payload['data']);
