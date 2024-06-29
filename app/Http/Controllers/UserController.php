@@ -27,6 +27,15 @@ class UserController extends Controller
                 ], 404);
             }
 
+            // check if student has paid
+            if ($student->is_paid) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Student has paid sir',
+                    'data' => $student
+                ], 409);
+            }
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Student found',
@@ -55,14 +64,18 @@ class UserController extends Controller
             if (!$student) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Student not found'
+                    'message' => 'Student not found',
+                    
                 ], 404);
             }
+
+            
 
             if ($student->is_paid) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'Student has paid'
+                    'message' => 'Student has paid',
+                    'data' => $student
                 ]);
             }
 
