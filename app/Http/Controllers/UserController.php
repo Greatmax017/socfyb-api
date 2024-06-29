@@ -216,6 +216,9 @@ class UserController extends Controller
             $payload = json_decode($request->getContent(), true);
             $event = $payload['event'];
 
+            $student = Student::where('reference', $payload['data']['reference'])->first();
+            $student->event = $event;
+            $student->save();
             
 
 

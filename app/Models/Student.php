@@ -17,11 +17,12 @@ class Student extends Model
         'department',
         'is_paid',
         'reference',
+        'event'
     ];
 
     protected $casts = [
         'is_paid' => 'boolean'
     ];
 
-    
+
 }
