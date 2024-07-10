@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\OldStudent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 use Paystack;
@@ -65,11 +67,11 @@ class UserController extends Controller
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Student not found',
-                    
+
                 ], 404);
             }
 
-            
+
 
             if ($student->is_paid) {
                 return response()->json([
@@ -100,7 +102,7 @@ class UserController extends Controller
     public function initialize_payment(Request $request)
     {
 
-       
+
 
 
         try {
@@ -117,16 +119,16 @@ class UserController extends Controller
             $reference = Paystack::genTranxRef();
 
             $amount = 5000;
-            
+
             //save refference to the database
             $user->reference = $reference;
             $user->save();
-            
+
 
 
             // prepare data for payment
             $data = [
-               
+
                 'email' => $user->email ?? $user->matric_no . '@socfyb.com',
                 'amount' => $amount * 100, //paystack expect the anount in kobo
                 'reference' => $reference, //unique reference
@@ -136,10 +138,10 @@ class UserController extends Controller
                     'name' => $user->name,
                     'department' => $user->department
                 ]
-                
+
             ];
 
-           
+
 
 
 
@@ -224,14 +226,14 @@ class UserController extends Controller
         try {
 
 
-           
+
 
 
             //get payload
             $payload = json_decode($request->getContent(), true);
             $event = $payload['event'];
 
-            
+
 
 
 
@@ -329,8 +331,6 @@ class UserController extends Controller
 
         // Log success
         Log::info('PaymentIntent succeeded: ' . json_encode($paymentIntent));
-
-
     }
 
     //handle payment intent failed
@@ -340,5 +340,56 @@ class UserController extends Controller
         Log::error('PaymentIntent failed: ' . $paymentIntent->id);
 
         //send email to user later
+    }
+
+    // correct software engineering spelling
+    public function test()
+    {
+        // $fields = Student::where('department', 'Software Enginering')->get();
+
+        // // correct the spelling
+        // foreach ($fields as $field) {
+        //     $field->department = 'Software Engineering';
+        //     $field->save();
+        // }
+
+        // Fetch all old students with their matric numbers, phones, and emails
+        $oldStudents = OldStudent::select('matric_no', 'phone', 'email')->get();
+        $updatedCount = 0;
+
+        DB::transaction(function () use ($oldStudents, &$updatedCount) {
+            foreach ($oldStudents as $oldStudent) {
+                $updated = DB::table('students')
+                    ->where('matric_no', $oldStudent->matric_no)
+                    ->update([
+                        'phone' => $oldStudent->phone,
+                        'email' => $oldStudent->email,
+                    ]);
+
+                $updatedCount += $updated;
+            }
+
+
+            // Then, update existing records
+            foreach ($oldStudents as $oldStudent) {
+                DB::table('students')
+                    ->where('matric_no', $oldStudent->matric_no)
+                    ->update([
+                        'phone' => $oldStudent->phone,
+                        'email' => $oldStudent->email,
+                    ]);
+            }
+        });
+
+
+
+
+
+
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'the operation was probably successful' . count($oldStudents)
+        ]);
     }
 }

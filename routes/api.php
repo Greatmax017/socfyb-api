@@ -22,3 +22,6 @@ Route::post('/verify-payment', 'App\Http\Controllers\UserController@verifyPaymen
 
  //initialize payment
  Route::post('initialize-payment', 'App\Http\Controllers\UserController@initialize_payment')->name('pay');
+
+ // test
+    Route::get('/test', 'App\Http\Controllers\UserController@test');
