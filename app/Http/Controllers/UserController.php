@@ -392,4 +392,54 @@ class UserController extends Controller
             'message' => 'the operation was probably successful' . count($oldStudents)
         ]);
     }
+
+    //book seat for student who paid
+    public function bookSeat(Request $request)
+    {
+        try {
+            $request->validate([
+                'matric_no' => 'required|string'
+            ]);
+
+            $student = Student::where('matric_no', $request->matric_no)->first();
+
+            if (!$student) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Student not found'
+                ], 404);
+            }
+
+            // check if student has paid
+            if (!$student->is_paid) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'You have not paid your dues, please pay to book a seat'
+                ], 409);
+            }
+
+            // check if student has booked
+            if ($student->is_booked) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Student has already booked'
+                ], 409);
+            }
+
+            // book seat
+            $student->is_booked = true;
+            $student->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Seat booked successfully',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

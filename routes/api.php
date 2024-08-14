@@ -25,3 +25,6 @@ Route::post('/verify-payment', 'App\Http\Controllers\UserController@verifyPaymen
 
  // test
     Route::get('/test', 'App\Http\Controllers\UserController@test');
+
+    //book seat
+    Route::post('/book-seat', 'App\Http\Controllers\UserController@bookSeat');
