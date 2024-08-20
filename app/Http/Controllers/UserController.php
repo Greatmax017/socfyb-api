@@ -402,7 +402,7 @@ class UserController extends Controller
             //close booking
             return response()->json([
                 'status' => 'error',
-                'message' => 'Booking has been closed'
+                'message' => 'Booking is closed'
             ], 409);
 
 
