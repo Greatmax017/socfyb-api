@@ -397,6 +397,16 @@ class UserController extends Controller
     public function bookSeat(Request $request)
     {
         try {
+
+
+            //close booking
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Booking has been closed'
+            ], 409);
+
+
+
             $request->validate([
                 'matric_no' => 'required|string'
             ]);
